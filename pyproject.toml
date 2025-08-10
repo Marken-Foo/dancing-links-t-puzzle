@@ -1,0 +1,12 @@
+[project]
+name = "t-puzzle"
+version = "0.1.0"
+description = "Implementation of dancing links to solve polyomino and polycube tiling problems."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "mypy>=1.17.1",
+]
