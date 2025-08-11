@@ -1,5 +1,10 @@
 from itertools import chain, cycle, islice
+from typing import TypeVar
+
 from dancing_links_nodes import ColumnHeader
+
+
+T = TypeVar("T")
 
 
 class Root:
@@ -59,8 +64,8 @@ class Root:
         # print(f"Found solutions: {solutions}")
 
         # print(f"State: {self}")
-        if len(solutions) > 0:
-            return solutions
+        # if len(solutions) > 0:
+        #     return solutions
 
         if self._is_empty():
             # print("Found a solution")
@@ -98,3 +103,13 @@ class Root:
                 column = next_column
             next_column = next_column.right
         return column
+
+
+def print_solutions(solutions: list[list[T]]) -> None:
+    print(f"Found {len(solutions)} solutions.")
+    for i, solution in enumerate(solutions):
+        print(f"Solution {i}: {solution_to_string(solution)}")
+
+
+def solution_to_string(solution: list[T]) -> str:
+    return ", ".join((str(item) for item in solution))
