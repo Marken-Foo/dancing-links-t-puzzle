@@ -50,7 +50,7 @@ def generate_piece_positions(
 def initialise_dancing_links(
     board: polym.Polyomino, piece_positions: Iterable[polym.Polyomino]
 ) -> dlinks.Root:
-    dancing_links = dlinks.Root()
+    dancing_links: dlinks.Root[tuple[int, int], polym.Polyomino] = dlinks.Root()
     for sq in board.squares:
         dancing_links.add_constraint((sq.x, sq.y))
     for piece in piece_positions:

@@ -2,7 +2,7 @@ import dancing_links_root as dlinks
 
 
 def knuth_example() -> dlinks.Root:
-    dancing_links = dlinks.Root()
+    dancing_links: dlinks.Root[str, str] = dlinks.Root()
     universe = "ABCDEFG"
     elements = ("CEF", "ADG", "BCF", "AD", "BG", "DEG")
     for c in universe:

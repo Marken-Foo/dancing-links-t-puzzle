@@ -47,7 +47,7 @@ def generate_piece_positions(
 def initialise_dancing_links(
     box: polyc.Polycube, piece_positions: Iterable[polyc.Polycube]
 ) -> dlinks.Root:
-    dancing_links = dlinks.Root()
+    dancing_links: dlinks.Root[tuple[int, int, int], polyc.Polycube] = dlinks.Root()
     for cube in box.cubes:
         dancing_links.add_constraint((cube.x, cube.y, cube.z))
     for piece in piece_positions:

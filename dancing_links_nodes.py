@@ -1,5 +1,5 @@
 class ColumnHeader:
-    def __init__(self, constraint, left, right, up=None, down=None):
+    def __init__(self, constraint, left, right, up=None, down=None) -> None:
         self.constraint = constraint
         self.left = left
         self.right = right
@@ -10,7 +10,7 @@ class ColumnHeader:
     def __str__(self) -> str:
         return f"Column({self.constraint}, size: {self.size})"
 
-    def _coords(self):
+    def _coords(self) -> str:
         return f"Column header {self.constraint}"
 
     def add_item(self, data):
@@ -48,7 +48,7 @@ class ColumnHeader:
 
 
 class DataObject:
-    def __init__(self, column, data, up=None, down=None):
+    def __init__(self, column, data, up=None, down=None) -> None:
         self.up = self if up is None else up
         self.down = self if down is None else down
         self.left = self
@@ -56,10 +56,10 @@ class DataObject:
         self.column = column
         self.data = data
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self._coords()} |U:{self.up._coords()}|D:{self.down._coords()}|L:{self.left._coords()}|R:{self.right._coords()}|"
 
-    def _coords(self):
+    def _coords(self) -> str:
         return f"{self.column.constraint} of {self.data}"
 
     def link_horizontal(self, left, right) -> None:

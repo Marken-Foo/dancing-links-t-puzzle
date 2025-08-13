@@ -1,18 +1,20 @@
+from collections.abc import Sequence
 from itertools import chain, cycle, islice
-from typing import TypeVar
+from typing import Generic, TypeVar
 
-from dancing_links_nodes import ColumnHeader
+from dancing_links_nodes import ColumnHeader, DataObject
 
 
+C = TypeVar("C")
 T = TypeVar("T")
 
 
-class Root:
+class Root(Generic[C, T]):
     def __init__(self) -> None:
-        self.left = self
-        self.right = self
-        self.constraints = {}
-        self.items = []
+        self.left: ColumnHeader | Root[C, T] = self
+        self.right: ColumnHeader | Root[C, T] = self
+        self.constraints: dict[C, ColumnHeader] = {}
+        self.items: list[T] = []
 
     def __str__(self) -> str:
         column = self.right
@@ -27,16 +29,16 @@ class Root:
             + f"Items: {self.items}"
         )
 
-    def add_constraint(self, constraint) -> None:
+    def add_constraint(self, constraint: C) -> None:
         new_column = ColumnHeader(constraint, self.left, self)
         self.left.right = new_column
         self.left = new_column
         self.constraints[constraint] = new_column
 
-    def add_item(self, data, constraints) -> None:
+    def add_item(self, data: T, constraints: Sequence[C]) -> None:
         if len(constraints) == 0:
             return
-        row_objects = []
+        row_objects: list[DataObject] = []
         for constraint in constraints:
             # Ensure constraint has been defined
             column = self.constraints.get(constraint, None)
@@ -54,22 +56,19 @@ class Root:
             obj.link_horizontal(left=left, right=right)
         self.items.append(data)
 
-    def solve(self):
+    def solve(self) -> list[list[C]]:
         solutions = self._search([], [])
         return solutions
 
-    def _search(self, partial_solution, solutions):
-        # print(f"Entering search with partial solution: {partial_solution}")
-
-        # print(f"Found solutions: {solutions}")
-
-        # print(f"State: {self}")
+    def _search(
+        self, partial_solution: list[C], solutions: list[list[C]]
+    ) -> list[list[C]]:
         # if len(solutions) > 0:
         #     return solutions
 
         if self._is_empty():
-            # print("Found a solution")
-            return solutions.append(partial_solution)
+            solutions.append(partial_solution)
+            return solutions
 
         column = self._find_smallest_column()
         assert column is not None
@@ -77,13 +76,14 @@ class Root:
 
         row = column.down
         while row is not column:
-            # print(f"Choosing item: {row}")
+            # Choose item corresponding to row
             node = row.right
             while node is not row:
                 node.column.cover()
                 node = node.right
             _partial_solution = partial_solution + [row.data]
             self._search(_partial_solution, solutions)
+            # Unchoose item corresponding to row
             node = row.left
             while node is not row:
                 node.column.uncover()
@@ -92,7 +92,7 @@ class Root:
         column.uncover()
         return solutions
 
-    def _is_empty(self):
+    def _is_empty(self) -> bool:
         return self.left is self and self.right is self
 
     def _find_smallest_column(self):
