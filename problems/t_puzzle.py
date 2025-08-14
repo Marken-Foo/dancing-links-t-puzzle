@@ -69,8 +69,8 @@ def main() -> None:
     print("Initialising dancing links...")
     dancing_links = t_puzzle()
     print("Solving...")
-    solutions = dancing_links.solve()
-    dlinks.print_solutions(solutions)
+    solutions = dancing_links.solve(1)
+    solutions.print()
     print("Finished.")
 
 

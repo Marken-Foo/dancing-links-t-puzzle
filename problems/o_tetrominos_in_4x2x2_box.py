@@ -61,8 +61,8 @@ def main() -> None:
     dancing_links = o_tetrominos_in_4x2x2_box()
     print("Solving...")
     solutions = dancing_links.solve()
-    dlinks.print_solutions(solutions)
-    assert len(solutions) == 11
+    solutions.print()
+    assert solutions.size == 11
     print("Finished.")
 
 

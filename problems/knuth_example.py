@@ -18,8 +18,8 @@ def main() -> None:
     problem = knuth_example()
     print("Solving...")
     solutions = problem.solve()
-    dlinks.print_solutions(solutions)
-    assert len(solutions) == 1
+    solutions.print
+    assert solutions.size == 1
     assert set(solutions[0]) == {"AD", "BG", "CEF"}
     print("Finished.")
 

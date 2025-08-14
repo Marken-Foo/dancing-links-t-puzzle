@@ -1,4 +1,6 @@
-from collections.abc import Sequence
+from __future__ import annotations
+
+from collections.abc import Iterable, Iterator, Sequence
 from itertools import chain, cycle, islice
 from typing import Generic, TypeVar
 
@@ -56,15 +58,18 @@ class Root(Generic[C, T]):
             obj.link_horizontal(left=left, right=right)
         self.items.append(data)
 
-    def solve(self) -> list[list[C]]:
-        solutions = self._search([], [])
-        return solutions
+    def solve(self, max_num_solutions=None) -> Solutions[T]:
+        solutions = self._search([], [], max_num_solutions)
+        return Solutions((Solution(s) for s in solutions))
 
     def _search(
-        self, partial_solution: list[C], solutions: list[list[C]]
-    ) -> list[list[C]]:
-        # if len(solutions) > 0:
-        #     return solutions
+        self,
+        partial_solution: list[T],
+        solutions: list[list[T]],
+        max_num_solutions: int | None = None,
+    ) -> list[list[T]]:
+        if max_num_solutions is not None and len(solutions) >= max_num_solutions:
+            return solutions
 
         if self._is_empty():
             solutions.append(partial_solution)
@@ -82,7 +87,7 @@ class Root(Generic[C, T]):
                 node.column.cover()
                 node = node.right
             _partial_solution = partial_solution + [row.data]
-            self._search(_partial_solution, solutions)
+            self._search(_partial_solution, solutions, max_num_solutions)
             # Unchoose item corresponding to row
             node = row.left
             while node is not row:
@@ -105,11 +110,32 @@ class Root(Generic[C, T]):
         return column
 
 
-def print_solutions(solutions: list[list[T]]) -> None:
-    print(f"Found {len(solutions)} solutions.")
-    for i, solution in enumerate(solutions):
-        print(f"Solution {i}: {solution_to_string(solution)}")
+class Solution(Generic[T]):
+    def __init__(self, solution: Iterable[T]) -> None:
+        self.solution: list[T] = list(solution)
+
+    def __str__(self) -> str:
+        return ", ".join((str(item) for item in self.solution))
+
+    def __iter__(self) -> Iterator[T]:
+        return self.solution.__iter__()
 
 
-def solution_to_string(solution: list[T]) -> str:
-    return ", ".join((str(item) for item in solution))
+class Solutions(Generic[T]):
+    def __init__(self, solutions: Iterable[Solution[T]]) -> None:
+        self.solutions: list[Solution[T]] = list(solutions)
+
+    @property
+    def size(self) -> int:
+        return len(self.solutions)
+
+    def print(self) -> None:
+        print(f"Found {len(self.solutions)} solutions.")
+        for i, solution in enumerate(self.solutions):
+            print(f"Solution {i}: {solution}")
+
+    def __iter__(self) -> Iterator[Solution[T]]:
+        return self.solutions.__iter__()
+
+    def __getitem__(self, key):
+        return self.solutions.__getitem__(key)
