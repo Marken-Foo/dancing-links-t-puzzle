@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import unittest
-from itertools import product
+from itertools import product, zip_longest
 
 from typing import TYPE_CHECKING
 
@@ -29,6 +29,9 @@ class Square:
 
     def rotate_anticlockwise(self) -> Square:
         return Square(x=-self.y, y=self.x)
+
+    def rotate_clockwise(self) -> Square:
+        return Square(x=self.y, y=-self.x)
 
     def reflect_about_x_axis(self) -> Square:
         return Square(-self.x, self.y)
@@ -84,6 +87,9 @@ class Polyomino:
     def rotate_anticlockwise(self) -> Polyomino:
         return Polyomino((sq.rotate_anticlockwise() for sq in self.squares))
 
+    def rotate_clockwise(self) -> Polyomino:
+        return Polyomino((sq.rotate_clockwise() for sq in self.squares))
+
     def reflect_about_x_axis(self) -> Polyomino:
         return Polyomino((sq.reflect_about_x_axis() for sq in self.squares))
 
@@ -92,6 +98,19 @@ class Polyomino:
 
     def contains(self, polyomino: Polyomino) -> bool:
         return all((sq in self.squares for sq in polyomino.squares))
+
+    def apply_transform(self, transform: str) -> Polyomino:
+        piece = self
+        match transform:
+            case "R+":
+                piece = piece.rotate_anticlockwise()
+            case "R-":
+                piece = piece.rotate_clockwise()
+            case "MX":
+                piece = piece.reflect_about_x_axis()
+            case "MY":
+                piece = piece.reflect_about_y_axis()
+        return piece
 
 
 # Assumes board and polyomino have already been translated to origin.
