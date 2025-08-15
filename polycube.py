@@ -39,6 +39,15 @@ class Cube:
 
     def rotate_anticlockwise_about_z_axis(self) -> Cube:
         return Cube(-self.y, self.x, self.z)
+    
+    def mirror_about_xy_plane(self) -> Cube:
+        return Cube(self.x, self.y, -self.z)
+    
+    def mirror_about_yz_plane(self) -> Cube:
+        return Cube(-self.x, self.y, self.z)
+    
+    def mirror_about_xz_plane(self) -> Cube:
+        return Cube(self.x, -self.y, self.z)
 
 
 class Polycube:
@@ -107,6 +116,21 @@ class Polycube:
     def rotate_anticlockwise_about_z_axis(self) -> Polycube:
         return Polycube(
             (cube.rotate_anticlockwise_about_z_axis() for cube in self.cubes)
+        )
+    
+    def mirror_about_xy_plane(self) -> Polycube:
+        return Polycube(
+            (cube.mirror_about_xy_plane() for cube in self.cubes)
+        )
+
+    def mirror_about_yz_plane(self) -> Polycube:
+        return Polycube(
+            (cube.mirror_about_yz_plane() for cube in self.cubes)
+        )
+    
+    def mirror_about_xz_plane(self) -> Polycube:
+        return Polycube(
+            (cube.mirror_about_xz_plane() for cube in self.cubes)
         )
 
     def apply_rotations(self, rotations: str) -> Polycube:
