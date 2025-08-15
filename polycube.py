@@ -28,6 +28,12 @@ class Cube:
     def __hash__(self) -> int:
         return hash((self.x, self.y, self.z))
 
+    def __lt__(self, other: Cube) -> bool:
+        return self.to_tuple().__lt__(other.to_tuple())
+
+    def to_tuple(self) -> tuple[int, int, int]:
+        return (self.x, self.y, self.z)
+
     def translate(self, dx: int, dy: int, dz: int) -> Cube:
         return Cube(self.x + dx, self.y + dy, self.z + dz)
 
@@ -39,13 +45,13 @@ class Cube:
 
     def rotate_anticlockwise_about_z_axis(self) -> Cube:
         return Cube(-self.y, self.x, self.z)
-    
+
     def mirror_about_xy_plane(self) -> Cube:
         return Cube(self.x, self.y, -self.z)
-    
+
     def mirror_about_yz_plane(self) -> Cube:
         return Cube(-self.x, self.y, self.z)
-    
+
     def mirror_about_xz_plane(self) -> Cube:
         return Cube(self.x, -self.y, self.z)
 
@@ -63,7 +69,7 @@ class Polycube:
         return isinstance(other, Polycube) and self.cubes == other.cubes
 
     def __hash__(self) -> int:
-        return hash(tuple(self.cubes))
+        return hash(tuple(sorted(self.cubes)))
 
     def get_bounds(self) -> tuple[int, int, int, int, int, int]:
         x_min = Polycube.MAX_XYZ
@@ -117,21 +123,35 @@ class Polycube:
         return Polycube(
             (cube.rotate_anticlockwise_about_z_axis() for cube in self.cubes)
         )
-    
+
     def mirror_about_xy_plane(self) -> Polycube:
-        return Polycube(
-            (cube.mirror_about_xy_plane() for cube in self.cubes)
-        )
+        return Polycube((cube.mirror_about_xy_plane() for cube in self.cubes))
 
     def mirror_about_yz_plane(self) -> Polycube:
-        return Polycube(
-            (cube.mirror_about_yz_plane() for cube in self.cubes)
-        )
-    
+        return Polycube((cube.mirror_about_yz_plane() for cube in self.cubes))
+
     def mirror_about_xz_plane(self) -> Polycube:
-        return Polycube(
-            (cube.mirror_about_xz_plane() for cube in self.cubes)
-        )
+        return Polycube((cube.mirror_about_xz_plane() for cube in self.cubes))
+
+    def apply_transform(self, transform: str) -> Polycube:
+        piece = self
+        match transform.upper():
+            case "RX":
+                piece = piece.rotate_anticlockwise_about_x_axis()
+            case "RY":
+                piece = piece.rotate_anticlockwise_about_y_axis()
+            case "RZ":
+                piece = piece.rotate_anticlockwise_about_z_axis()
+            case "MXY" | "MZ":
+                piece = piece.mirror_about_xy_plane()
+            case "MYZ" | "MX":
+                piece = piece.mirror_about_yz_plane()
+            case "MXZ" | "MZ":
+                piece = piece.mirror_about_xz_plane()
+            case _:
+                # Do nothing
+                pass
+        return piece
 
     def apply_rotations(self, rotations: str) -> Polycube:
         piece = self
