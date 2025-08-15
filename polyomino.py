@@ -24,6 +24,9 @@ class Square:
     def __hash__(self) -> int:
         return hash((self.x, self.y))
 
+    def to_tuple(self) -> tuple[int, int]:
+        return (self.x, self.y)
+
     def translate(self, dx: int, dy: int) -> Square:
         return Square(self.x + dx, self.y + dy)
 
@@ -101,7 +104,7 @@ class Polyomino:
 
     def apply_transform(self, transform: str) -> Polyomino:
         piece = self
-        match transform:
+        match transform.upper():
             case "R+":
                 piece = piece.rotate_anticlockwise()
             case "R-":
@@ -110,6 +113,9 @@ class Polyomino:
                 piece = piece.reflect_about_x_axis()
             case "MY":
                 piece = piece.reflect_about_y_axis()
+            case _:
+                # Do nothing
+                pass
         return piece
 
 

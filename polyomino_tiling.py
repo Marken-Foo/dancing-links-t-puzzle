@@ -46,9 +46,9 @@ def _initialise_dancing_links(
 ) -> PolyominoTilingProblem:
     dancing_links: PolyominoTilingProblem = dlinks.Root()
     for sq in board.squares:
-        dancing_links.add_constraint((sq.x, sq.y))
+        dancing_links.add_constraint(sq.to_tuple())
     for piece in piece_positions:
-        dancing_links.add_item(piece, [(sq.x, sq.y) for sq in piece.squares])
+        dancing_links.add_item(piece, [sq.to_tuple() for sq in piece.squares])
     return dancing_links
 
 

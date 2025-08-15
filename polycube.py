@@ -153,17 +153,6 @@ class Polycube:
                 pass
         return piece
 
-    def apply_rotations(self, rotations: str) -> Polycube:
-        piece = self
-        for c in rotations.upper():
-            if c == "X":
-                piece = piece.rotate_anticlockwise_about_x_axis()
-            if c == "Y":
-                piece = piece.rotate_anticlockwise_about_y_axis()
-            if c == "Z":
-                piece = piece.rotate_anticlockwise_about_z_axis()
-        return piece
-
     def contains(self, polycube: Polycube) -> bool:
         return all((cube in self.cubes for cube in polycube.cubes))
 
