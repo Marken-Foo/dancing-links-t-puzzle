@@ -10,9 +10,9 @@ PolycubeTilingProblem = dlinks.Root[tuple[int, int, int], polyc.Polycube]
 def _define_all_piece_orientations(
     polycubes: Iterable[polyc.Polycube],
 ) -> set[polyc.Polycube]:
-    res = set()
+    res: set[polyc.Polycube] = set()
 
-    orientation_transforms = []
+    orientation_transforms: list[list[str]] = []
     for i in range(4):
         orientation_transforms.append(["RX"] * i)
         orientation_transforms.append(["RZ", "RZ"] + ["RX"] * i)

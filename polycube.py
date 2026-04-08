@@ -155,6 +155,9 @@ class Polycube:
 
     def contains(self, polycube: Polycube) -> bool:
         return all((cube in self.cubes for cube in polycube.cubes))
+    
+    def combine(self, other: Polycube) -> Polycube:
+        return Polycube(self.cubes.union(other.cubes))
 
 
 def generate_positions(

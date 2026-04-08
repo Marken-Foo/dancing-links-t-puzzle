@@ -1,12 +1,14 @@
-import problems.knuth_example as knuth_example
-from time_solving import time_n_solves
+import problems.t_puzzle as t_puzzle
+import polycube_drawing
 
 
 def main() -> None:
-    print("See other files for example problems.")
-    knuth_example.main()
-    print("=======")
-    time_n_solves("Knuth's example", knuth_example.knuth_example, 1000)
+    solutions = t_puzzle.t_puzzle().solve(1)
+    if not solutions:
+        print("No solutions found.")
+        return
+    solution = solutions[0]
+    polycube_drawing.draw_polycubes_tiling(solution.solution)
 
 
 if __name__ == "__main__":
