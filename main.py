@@ -8,6 +8,7 @@ def main() -> None:
         print("No solutions found.")
         return
     solution = solutions[0]
+    polycube_drawing.print_polycube_tiling_layers(solution.solution)
     polycube_drawing.draw_polycubes_tiling(solution.solution)
 
 
